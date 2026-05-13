@@ -6,6 +6,7 @@ import { LoginPage } from '../pages/LoginPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { PacientesPage } from '../pages/PacientesPage'
 import { ProfesionalesPage } from '../pages/ProfesionalesPage'
+import { ProtectedRoute } from './ProtectedRoute'
 
 export function AppRouter() {
   return (
@@ -13,12 +14,14 @@ export function AppRouter() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
 
-      <Route path="/app" element={<MainLayout />}>
-        <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="pacientes" element={<PacientesPage />} />
-        <Route path="citas" element={<CitasPage />} />
-        <Route path="profesionales" element={<ProfesionalesPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/app" element={<MainLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="pacientes" element={<PacientesPage />} />
+          <Route path="citas" element={<CitasPage />} />
+          <Route path="profesionales" element={<ProfesionalesPage />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

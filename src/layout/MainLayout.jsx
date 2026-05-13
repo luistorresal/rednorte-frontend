@@ -1,13 +1,19 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const getNavLinkClass = ({ isActive }) =>
   isActive ? 'main-nav__link main-nav__link--active' : 'main-nav__link'
 
 export function MainLayout() {
+  const { logout } = useAuth()
+
   return (
     <div className="app-shell">
       <header className="app-header">
         <h1>RedNorte - Gestion Hospitalaria</h1>
+        <button className="logout-button" onClick={logout} type="button">
+          Cerrar sesion
+        </button>
       </header>
 
       <nav className="main-nav">

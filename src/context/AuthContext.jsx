@@ -1,0 +1,76 @@
+import { createContext, useContext, useMemo, useState } from 'react'
+import { authService } from '../services/authService'
+
+const TOKEN_STORAGE_KEY = 'rednorte_auth_token'
+const AuthContext = createContext(null)
+
+function getStoredToken() {
+  return window.localStorage.getItem(TOKEN_STORAGE_KEY)
+}
+
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(getStoredToken)
+  const [isLoading, setIsLoading] = useState(false)
+  const [authError, setAuthError] = useState('')
+
+  const isAuthenticated = Boolean(token)
+
+  const login = async ({ username, password }) => {
+    setIsLoading(true)
+    setAuthError('')
+
+    try {
+      const loginResponse = await authService.login({ username, password })
+      const nextToken = loginResponse?.token
+
+      if (!nextToken) {
+        throw new Error('No se recibio token de autenticacion.')
+      }
+
+      window.localStorage.setItem(TOKEN_STORAGE_KEY, nextToken)
+      setToken(nextToken)
+      return true
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        'No fue posible iniciar sesion.'
+      setAuthError(errorMessage)
+      return false
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const logout = () => {
+    window.localStorage.removeItem(TOKEN_STORAGE_KEY)
+    setToken(null)
+    setAuthError('')
+  }
+
+  const contextValue = useMemo(
+    () => ({
+      token,
+      isAuthenticated,
+      isLoading,
+      authError,
+      login,
+      logout,
+    }),
+    [token, isAuthenticated, isLoading, authError],
+  )
+
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+
+  if (!context) {
+    throw new Error('useAuth debe usarse dentro de AuthProvider.')
+  }
+
+  return context
+}

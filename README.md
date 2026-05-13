@@ -50,5 +50,7 @@ src/
 - Estructura inicial frontend creada.
 - Navegacion base por modulos implementada.
 - Cliente API configurado para integrarse con API Gateway.
+- Login funcional con persistencia de token en navegador.
+- Rutas protegidas para modulos internos (`/app/*`).
 
 Los siguientes commits implementaran autenticacion y CRUDs de cada modulo.
