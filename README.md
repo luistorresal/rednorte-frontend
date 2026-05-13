@@ -61,5 +61,6 @@ src/
 - Login funcional con persistencia de token en navegador.
 - Rutas protegidas para modulos internos (`/app/*`).
 - Modulo Pacientes con CRUD visual y fallback mock sin backend.
+- Modulo Profesionales con CRUD visual alineado al backend.
 
 Los siguientes commits implementaran autenticacion y CRUDs de cada modulo.
