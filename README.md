@@ -27,6 +27,14 @@ cp .env.example .env
 
 ```env
 VITE_API_URL=http://localhost:8085
+VITE_ENABLE_DEMO_LOGIN=true
+```
+
+`VITE_ENABLE_DEMO_LOGIN=true` permite entrar en modo demo cuando el backend no
+esta disponible. Para usar solo backend real, configura:
+
+```env
+VITE_ENABLE_DEMO_LOGIN=false
 ```
 
 ## Ejecucion en desarrollo
@@ -52,5 +60,6 @@ src/
 - Cliente API configurado para integrarse con API Gateway.
 - Login funcional con persistencia de token en navegador.
 - Rutas protegidas para modulos internos (`/app/*`).
+- Modulo Pacientes con CRUD visual y fallback mock sin backend.
 
 Los siguientes commits implementaran autenticacion y CRUDs de cada modulo.

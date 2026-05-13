@@ -6,6 +6,7 @@ const INITIAL_CREDENTIALS = {
   username: 'admin',
   password: '1234',
 }
+const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN === 'true'
 
 export function LoginPage() {
   const [formValues, setFormValues] = useState(INITIAL_CREDENTIALS)
@@ -34,6 +35,11 @@ export function LoginPage() {
         <p className="auth-help">
           Ingresa con credenciales del gateway para acceder al sistema.
         </p>
+        {DEMO_LOGIN_ENABLED ? (
+          <p className="auth-help">
+            Si el backend no responde, se habilitara acceso en modo demo.
+          </p>
+        ) : null}
 
         <label className="auth-label" htmlFor="username">
           Usuario

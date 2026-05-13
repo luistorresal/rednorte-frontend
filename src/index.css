@@ -83,6 +83,20 @@ a {
   background: #334155;
 }
 
+button {
+  border: 1px solid #d1d5db;
+  border-radius: 0.45rem;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f3f4f6;
+}
+
 .page-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -93,6 +107,18 @@ a {
 
 .page-card h2 {
   margin-top: 0;
+}
+
+.page-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-card__hint {
+  margin-top: 0;
+  color: #4b5563;
 }
 
 .auth-shell {
@@ -162,4 +188,71 @@ a {
   margin: 0.25rem 0 0;
   color: #b91c1c;
   font-weight: 600;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.55rem;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.data-table th {
+  background: #f9fafb;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.module-form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.module-form input {
+  border: 1px solid #d1d5db;
+  border-radius: 0.45rem;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+}
+
+.module-form__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.danger-button {
+  background: #b91c1c;
+  color: #ffffff;
+  border: none;
+}
+
+.danger-button:hover {
+  background: #991b1b;
+}
+
+@media (max-width: 1024px) {
+  .module-grid {
+    grid-template-columns: 1fr;
+  }
 }

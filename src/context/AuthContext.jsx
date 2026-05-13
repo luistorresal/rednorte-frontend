@@ -2,6 +2,8 @@ import { createContext, useContext, useMemo, useState } from 'react'
 import { authService } from '../services/authService'
 
 const TOKEN_STORAGE_KEY = 'rednorte_auth_token'
+const DEMO_TOKEN = 'demo-mode-token'
+const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN === 'true'
 const AuthContext = createContext(null)
 
 function getStoredToken() {
@@ -31,6 +33,13 @@ export function AuthProvider({ children }) {
       setToken(nextToken)
       return true
     } catch (error) {
+      if (DEMO_LOGIN_ENABLED && error?.code === 'ERR_NETWORK') {
+        window.localStorage.setItem(TOKEN_STORAGE_KEY, DEMO_TOKEN)
+        setToken(DEMO_TOKEN)
+        setAuthError('')
+        return true
+      }
+
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
