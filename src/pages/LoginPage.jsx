@@ -31,13 +31,13 @@ export function LoginPage() {
   return (
     <section className="auth-shell">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h2>Inicio de sesion</h2>
+        <h2>Inicio de sesión</h2>
         <p className="auth-help">
           Ingresa con credenciales del gateway para acceder al sistema.
         </p>
         {DEMO_LOGIN_ENABLED ? (
           <p className="auth-help">
-            Si el backend no responde, se habilitara acceso en modo demo.
+            Si el backend no responde, se habilitará acceso en modo demo.
           </p>
         ) : null}
 
@@ -53,7 +53,7 @@ export function LoginPage() {
         />
 
         <label className="auth-label" htmlFor="password">
-          Contrasena
+          Contraseña
         </label>
         <input
           className="auth-input"

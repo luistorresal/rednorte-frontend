@@ -72,7 +72,7 @@ export function CitasPage() {
 
   const handleDelete = async (id) => {
     const confirmation = window.confirm(
-      'Esta accion eliminara la cita. Deseas continuar?',
+      'Esta acción eliminará la cita. ¿Deseas continuar?',
     )
     if (!confirmation) return
 
@@ -148,8 +148,8 @@ export function CitasPage() {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Paciente ID</th>
-                  <th>Profesional ID</th>
+                  <th>ID paciente</th>
+                  <th>ID profesional</th>
                   <th>Fecha</th>
                   <th>Modalidad</th>
                   <th>Estado</th>
@@ -191,7 +191,7 @@ export function CitasPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="pacienteId">Paciente ID</label>
+          <label htmlFor="pacienteId">ID paciente</label>
           <input
             id="pacienteId"
             min="1"
@@ -202,7 +202,7 @@ export function CitasPage() {
             value={formValues.pacienteId}
           />
 
-          <label htmlFor="profesionalId">Profesional ID</label>
+          <label htmlFor="profesionalId">ID profesional</label>
           <input
             id="profesionalId"
             min="1"

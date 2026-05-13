@@ -10,9 +10,9 @@ export function MainLayout() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <h1>RedNorte - Gestion Hospitalaria</h1>
+        <h1>RedNorte - Gestión Hospitalaria</h1>
         <button className="logout-button" onClick={logout} type="button">
-          Cerrar sesion
+          Cerrar sesión
         </button>
       </header>
 

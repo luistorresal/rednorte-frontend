@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        'No fue posible iniciar sesion.'
+        'No fue posible iniciar sesión.'
       setAuthError(errorMessage)
       return false
     } finally {

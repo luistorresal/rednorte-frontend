@@ -66,7 +66,7 @@ export function PacientesPage() {
 
   const handleDelete = async (id) => {
     const confirmation = window.confirm(
-      'Esta accion eliminara el paciente. Deseas continuar?',
+      'Esta acción eliminará el paciente. ¿Deseas continuar?',
     )
 
     if (!confirmation) return
@@ -138,7 +138,7 @@ export function PacientesPage() {
                   <th>Nombres</th>
                   <th>Apellidos</th>
                   <th>RUT</th>
-                  <th>Telefono</th>
+                  <th>Teléfono</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -201,7 +201,7 @@ export function PacientesPage() {
             value={formValues.rut}
           />
 
-          <label htmlFor="telefono">Telefono</label>
+          <label htmlFor="telefono">Teléfono</label>
           <input
             id="telefono"
             name="telefono"

@@ -70,7 +70,7 @@ export function ProfesionalesPage() {
 
   const handleDelete = async (id) => {
     const confirmation = window.confirm(
-      'Esta accion eliminara el profesional. Deseas continuar?',
+      'Esta acción eliminará el profesional. ¿Deseas continuar?',
     )
     if (!confirmation) return
 
@@ -143,7 +143,7 @@ export function ProfesionalesPage() {
                   <th>Apellidos</th>
                   <th>Especialidad</th>
                   <th>Email</th>
-                  <th>Telefono</th>
+                  <th>Teléfono</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -230,7 +230,7 @@ export function ProfesionalesPage() {
             value={formValues.email}
           />
 
-          <label htmlFor="telefono">Telefono</label>
+          <label htmlFor="telefono">Teléfono</label>
           <input
             id="telefono"
             name="telefono"
