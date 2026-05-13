@@ -235,6 +235,14 @@ button:hover {
   font: inherit;
 }
 
+.module-form select,
+.module-form textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 0.45rem;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+}
+
 .module-form__actions {
   display: flex;
   gap: 0.5rem;

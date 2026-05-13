@@ -62,5 +62,6 @@ src/
 - Rutas protegidas para modulos internos (`/app/*`).
 - Modulo Pacientes con CRUD visual y fallback mock sin backend.
 - Modulo Profesionales con CRUD visual alineado al backend.
+- Modulo Citas con CRUD visual y campos compatibles con microservicio.
 
 Los siguientes commits implementaran autenticacion y CRUDs de cada modulo.
