@@ -1,7 +1,6 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useMemo, useState } from 'react'
+import { TOKEN_STORAGE_KEY } from '../services/apiClient'
 import { authService } from '../services/authService'
-
-const TOKEN_STORAGE_KEY = 'rednorte_auth_token'
 const DEMO_TOKEN = 'demo-mode-token'
 const DEMO_LOGIN_ENABLED = import.meta.env.VITE_ENABLE_DEMO_LOGIN === 'true'
 const AuthContext = createContext(null)
@@ -74,12 +73,4 @@ export function AuthProvider({ children }) {
   )
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-
-  if (!context) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider.')
-  }
-
-  return context
-}
+export { AuthContext }

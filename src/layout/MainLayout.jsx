@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 
 const getNavLinkClass = ({ isActive }) =>
   isActive ? 'main-nav__link main-nav__link--active' : 'main-nav__link'
