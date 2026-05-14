@@ -6,6 +6,7 @@ const EMPTY_FORM = {
   apellidos: '',
   rut: '',
   telefono: '',
+  email:'',
 }
 
 export function PacientesPage() {
@@ -60,6 +61,7 @@ export function PacientesPage() {
       apellidos: paciente.apellidos,
       rut: paciente.rut,
       telefono: paciente.telefono,
+      email: paciente.email
     })
     setEditingId(paciente.id)
   }
@@ -139,6 +141,7 @@ export function PacientesPage() {
                   <th>Apellidos</th>
                   <th>RUT</th>
                   <th>Teléfono</th>
+                  <th>Email</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -150,6 +153,7 @@ export function PacientesPage() {
                     <td>{paciente.apellidos}</td>
                     <td>{paciente.rut}</td>
                     <td>{paciente.telefono}</td>
+                    <td>{paciente.email}</td>
                     <td className="actions-cell">
                       <button onClick={() => handleEdit(paciente)} type="button">
                         Editar
@@ -208,6 +212,14 @@ export function PacientesPage() {
             onChange={handleChange}
             required
             value={formValues.telefono}
+          />
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            onChange={handleChange}
+            required
+            value={formValues.email}
           />
 
           <div className="module-form__actions">
