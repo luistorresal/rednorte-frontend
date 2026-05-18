@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { citasService } from '../services/citasService'
+import { pacientesService } from '../services/pacientesService'
+import { profesionalesService } from '../services/profesionalesService'
 
 const EMPTY_FORM = {
   pacienteId: '',
@@ -15,6 +17,8 @@ const ESTADOS = ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'ATENDIDA']
 
 export function CitasPage() {
   const [citas, setCitas] = useState([])
+  const [pacientes, setPacientes] = useState([])
+  const [profesionales, setProfesionales] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [sourceMode, setSourceMode] = useState('api')
@@ -27,14 +31,56 @@ export function CitasPage() {
     [editingId],
   )
 
+  const pacientesById = useMemo(
+    () => new Map(pacientes.map((paciente) => [Number(paciente.id), paciente])),
+    [pacientes],
+  )
+
+  const profesionalesById = useMemo(
+    () =>
+      new Map(
+        profesionales.map((profesional) => [
+          Number(profesional.id),
+          profesional,
+        ]),
+      ),
+    [profesionales],
+  )
+
+  const getPacienteName = (pacienteId) => {
+    const paciente = pacientesById.get(Number(pacienteId))
+    if (!paciente) return `Paciente #${pacienteId}`
+    return `${paciente.nombres} ${paciente.apellidos}`.trim()
+  }
+
+  const getProfesionalName = (profesionalId) => {
+    const profesional = profesionalesById.get(Number(profesionalId))
+    if (!profesional) return `Profesional #${profesionalId}`
+    return `${profesional.nombres} ${profesional.apellidos}`.trim()
+  }
+
   const loadCitas = async () => {
     setIsLoading(true)
     setErrorMessage('')
 
     try {
-      const { data, source } = await citasService.listar()
-      setCitas(data)
-      setSourceMode(source)
+      const [citasResponse, pacientesResponse, profesionalesResponse] =
+        await Promise.all([
+          citasService.listar(),
+          pacientesService.listar(),
+          profesionalesService.listar(),
+        ])
+
+      setCitas(citasResponse.data)
+      setPacientes(pacientesResponse.data)
+      setProfesionales(profesionalesResponse.data)
+      setSourceMode(
+        [citasResponse.source, pacientesResponse.source, profesionalesResponse.source].includes(
+          'mock',
+        )
+          ? 'mock'
+          : 'api',
+      )
     } catch (error) {
       setErrorMessage(
         error?.response?.data?.message || 'No se pudo cargar el listado de citas.',
@@ -148,8 +194,8 @@ export function CitasPage() {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>ID paciente</th>
-                  <th>ID profesional</th>
+                  <th>Paciente</th>
+                  <th>Profesional</th>
                   <th>Fecha</th>
                   <th>Modalidad</th>
                   <th>Estado</th>
@@ -161,8 +207,14 @@ export function CitasPage() {
                 {citas.map((cita) => (
                   <tr key={cita.id}>
                     <td>{cita.id}</td>
-                    <td>{cita.pacienteId}</td>
-                    <td>{cita.profesionalId}</td>
+                    <td>
+                      {getPacienteName(cita.pacienteId)}
+                      <span className="muted-cell">ID {cita.pacienteId}</span>
+                    </td>
+                    <td>
+                      {getProfesionalName(cita.profesionalId)}
+                      <span className="muted-cell">ID {cita.profesionalId}</span>
+                    </td>
                     <td>{new Date(cita.fecha).toLocaleString()}</td>
                     <td>{cita.modalidad}</td>
                     <td>{cita.estado}</td>
@@ -191,27 +243,38 @@ export function CitasPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="pacienteId">ID paciente</label>
-          <input
+          <label htmlFor="pacienteId">Paciente</label>
+          <select
             id="pacienteId"
-            min="1"
             name="pacienteId"
             onChange={handleChange}
             required
-            type="number"
             value={formValues.pacienteId}
-          />
+          >
+            <option value="">Selecciona un paciente</option>
+            {pacientes.map((paciente) => (
+              <option key={paciente.id} value={paciente.id}>
+                {paciente.nombres} {paciente.apellidos} (ID {paciente.id})
+              </option>
+            ))}
+          </select>
 
-          <label htmlFor="profesionalId">ID profesional</label>
-          <input
+          <label htmlFor="profesionalId">Profesional</label>
+          <select
             id="profesionalId"
-            min="1"
             name="profesionalId"
             onChange={handleChange}
             required
-            type="number"
             value={formValues.profesionalId}
-          />
+          >
+            <option value="">Selecciona un profesional</option>
+            {profesionales.map((profesional) => (
+              <option key={profesional.id} value={profesional.id}>
+                {profesional.nombres} {profesional.apellidos} -{' '}
+                {profesional.especialidad} (ID {profesional.id})
+              </option>
+            ))}
+          </select>
 
           <label htmlFor="fecha">Fecha y hora</label>
           <input

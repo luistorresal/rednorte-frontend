@@ -10,6 +10,15 @@ const EMPTY_FORM = {
   telefono: '',
 }
 
+const normalizeProfesionalPayload = (values) => ({
+  rut: values.rut.trim().toUpperCase(),
+  nombres: values.nombres.trim().toUpperCase(),
+  apellidos: values.apellidos.trim().toUpperCase(),
+  especialidad: values.especialidad.trim().toUpperCase(),
+  email: values.email.trim().toUpperCase(),
+  telefono: values.telefono.trim().toUpperCase(),
+})
+
 export function ProfesionalesPage() {
   const [profesionales, setProfesionales] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -58,12 +67,12 @@ export function ProfesionalesPage() {
 
   const handleEdit = (profesional) => {
     setFormValues({
-      rut: profesional.rut,
-      nombres: profesional.nombres,
-      apellidos: profesional.apellidos,
-      especialidad: profesional.especialidad,
-      email: profesional.email,
-      telefono: profesional.telefono,
+      rut: profesional.rut || '',
+      nombres: profesional.nombres || '',
+      apellidos: profesional.apellidos || '',
+      especialidad: profesional.especialidad || '',
+      email: profesional.email || '',
+      telefono: profesional.telefono || '',
     })
     setEditingId(profesional.id)
   }
@@ -94,10 +103,11 @@ export function ProfesionalesPage() {
     setErrorMessage('')
 
     try {
+      const payload = normalizeProfesionalPayload(formValues)
       if (editingId) {
-        await profesionalesService.actualizar(editingId, formValues)
+        await profesionalesService.actualizar(editingId, payload)
       } else {
-        await profesionalesService.crear(formValues)
+        await profesionalesService.crear(payload)
       }
       await loadProfesionales()
       resetForm()

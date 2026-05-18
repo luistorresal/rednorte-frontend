@@ -1,4 +1,5 @@
 import { createContext, useMemo, useState } from 'react'
+import PropTypes from 'prop-types'
 import { TOKEN_STORAGE_KEY } from '../services/apiClient'
 import { authService } from '../services/authService'
 const DEMO_TOKEN = 'demo-mode-token'
@@ -74,3 +75,7 @@ export function AuthProvider({ children }) {
 }
 
 export { AuthContext }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}

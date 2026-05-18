@@ -6,8 +6,16 @@ const EMPTY_FORM = {
   apellidos: '',
   rut: '',
   telefono: '',
-  email:'',
+  email: '',
 }
+
+const normalizePacientePayload = (values) => ({
+  nombres: values.nombres.trim().toUpperCase(),
+  apellidos: values.apellidos.trim().toUpperCase(),
+  rut: values.rut.trim().toUpperCase(),
+  telefono: values.telefono.trim().toUpperCase(),
+  email: values.email.trim().toUpperCase(),
+})
 
 export function PacientesPage() {
   const [pacientes, setPacientes] = useState([])
@@ -57,11 +65,11 @@ export function PacientesPage() {
 
   const handleEdit = (paciente) => {
     setFormValues({
-      nombres: paciente.nombres,
-      apellidos: paciente.apellidos,
-      rut: paciente.rut,
-      telefono: paciente.telefono,
-      email: paciente.email
+      nombres: paciente.nombres || '',
+      apellidos: paciente.apellidos || '',
+      rut: paciente.rut || '',
+      telefono: paciente.telefono || '',
+      email: paciente.email || '',
     })
     setEditingId(paciente.id)
   }
@@ -93,10 +101,11 @@ export function PacientesPage() {
     setErrorMessage('')
 
     try {
+      const payload = normalizePacientePayload(formValues)
       if (editingId) {
-        await pacientesService.actualizar(editingId, formValues)
+        await pacientesService.actualizar(editingId, payload)
       } else {
-        await pacientesService.crear(formValues)
+        await pacientesService.crear(payload)
       }
       await loadPacientes()
       resetForm()
