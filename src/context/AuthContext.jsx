@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
       const nextToken = loginResponse?.token
 
       if (!nextToken) {
-        throw new Error('No se recibió token de autenticación.')
+        throw new Error('No fue posible iniciar sesión. Inténtalo de nuevo.')
       }
 
       window.localStorage.setItem(TOKEN_STORAGE_KEY, nextToken)

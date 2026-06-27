@@ -81,10 +81,8 @@ export function CitasPage() {
           ? 'mock'
           : 'api',
       )
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo cargar el listado de citas.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar las citas. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -128,11 +126,8 @@ export function CitasPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar la cita seleccionada.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar la cita. Inténtalo nuevamente.')
     }
   }
 
@@ -159,8 +154,8 @@ export function CitasPage() {
       }
       await loadCitas()
       resetForm()
-    } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'No se pudo guardar la cita.')
+    } catch {
+      setErrorMessage('No se pudo guardar la cita. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -178,16 +173,16 @@ export function CitasPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'No se pudo conectar al servidor. Mostrando datos de ejemplo.'
-            : 'Datos cargados desde el servidor.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando citas...</p>
+          <p className="state-message">Cargando citas...</p>
         ) : citas.length === 0 ? (
-          <p>No hay citas registradas.</p>
+          <p className="state-message">No hay citas registradas.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">

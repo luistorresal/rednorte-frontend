@@ -41,11 +41,8 @@ export function ProfesionalesPage() {
       const { data, source } = await profesionalesService.listar()
       setProfesionales(data)
       setSourceMode(source)
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo cargar el listado de profesionales.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar los profesionales. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -89,11 +86,8 @@ export function ProfesionalesPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar el profesional seleccionado.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar el profesional. Inténtalo nuevamente.')
     }
   }
 
@@ -111,10 +105,8 @@ export function ProfesionalesPage() {
       }
       await loadProfesionales()
       resetForm()
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo guardar el profesional.',
-      )
+    } catch {
+      setErrorMessage('No se pudo guardar el profesional. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -132,16 +124,16 @@ export function ProfesionalesPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'No se pudo conectar al servidor. Mostrando datos de ejemplo.'
-            : 'Datos cargados desde el servidor.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando profesionales...</p>
+          <p className="state-message">Cargando profesionales...</p>
         ) : profesionales.length === 0 ? (
-          <p>No hay profesionales registrados.</p>
+          <p className="state-message">No hay profesionales registrados.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">

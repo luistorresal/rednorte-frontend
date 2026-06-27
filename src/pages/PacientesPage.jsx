@@ -39,11 +39,8 @@ export function PacientesPage() {
       const { data, source } = await pacientesService.listar()
       setPacientes(data)
       setSourceMode(source)
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo cargar el listado de pacientes.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar los pacientes. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -87,11 +84,8 @@ export function PacientesPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar el paciente seleccionado.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar el paciente. Inténtalo nuevamente.')
     }
   }
 
@@ -109,10 +103,8 @@ export function PacientesPage() {
       }
       await loadPacientes()
       resetForm()
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo guardar el paciente.',
-      )
+    } catch {
+      setErrorMessage('No se pudo guardar el paciente. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -130,16 +122,16 @@ export function PacientesPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'No se pudo conectar al servidor. Mostrando datos de ejemplo.'
-            : 'Datos cargados desde el servidor.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando pacientes...</p>
+          <p className="state-message">Cargando pacientes...</p>
         ) : pacientes.length === 0 ? (
-          <p>No hay pacientes registrados.</p>
+          <p className="state-message">No hay pacientes registrados.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">

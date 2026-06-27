@@ -68,11 +68,8 @@ export function DashboardPage() {
           citasResponse.source,
         ]),
       })
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo cargar el resumen del dashboard.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar el resumen. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -100,7 +97,7 @@ export function DashboardPage() {
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando resumen...</p>
+          <p className="state-message">Cargando resumen...</p>
         ) : (
           <>
             <p className="page-card__hint">{sourceLabel}</p>

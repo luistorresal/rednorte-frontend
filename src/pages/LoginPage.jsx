@@ -33,11 +33,11 @@ export function LoginPage() {
       <form className="auth-card" onSubmit={handleSubmit}>
         <h2>Inicio de sesión</h2>
         <p className="auth-help">
-          Ingresa con credenciales del gateway para acceder al sistema.
+          Ingresa con tu usuario y contraseña para acceder al sistema.
         </p>
         {DEMO_LOGIN_ENABLED ? (
           <p className="auth-help">
-            Si el backend no responde, se habilitará acceso en modo demo.
+            Si el sistema no está disponible, se activará el modo de demostración.
           </p>
         ) : null}
 
