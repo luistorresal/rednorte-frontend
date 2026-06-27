@@ -6,8 +6,16 @@ const EMPTY_FORM = {
   apellidos: '',
   rut: '',
   telefono: '',
-  email:'',
+  email: '',
 }
+
+const normalizePacientePayload = (values) => ({
+  nombres: values.nombres.trim().toUpperCase(),
+  apellidos: values.apellidos.trim().toUpperCase(),
+  rut: values.rut.trim().toUpperCase(),
+  telefono: values.telefono.trim().toUpperCase(),
+  email: values.email.trim().toUpperCase(),
+})
 
 export function PacientesPage() {
   const [pacientes, setPacientes] = useState([])
@@ -31,11 +39,8 @@ export function PacientesPage() {
       const { data, source } = await pacientesService.listar()
       setPacientes(data)
       setSourceMode(source)
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo cargar el listado de pacientes.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar los pacientes. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -57,11 +62,11 @@ export function PacientesPage() {
 
   const handleEdit = (paciente) => {
     setFormValues({
-      nombres: paciente.nombres,
-      apellidos: paciente.apellidos,
-      rut: paciente.rut,
-      telefono: paciente.telefono,
-      email: paciente.email
+      nombres: paciente.nombres || '',
+      apellidos: paciente.apellidos || '',
+      rut: paciente.rut || '',
+      telefono: paciente.telefono || '',
+      email: paciente.email || '',
     })
     setEditingId(paciente.id)
   }
@@ -79,11 +84,8 @@ export function PacientesPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar el paciente seleccionado.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar el paciente. Inténtalo nuevamente.')
     }
   }
 
@@ -93,17 +95,16 @@ export function PacientesPage() {
     setErrorMessage('')
 
     try {
+      const payload = normalizePacientePayload(formValues)
       if (editingId) {
-        await pacientesService.actualizar(editingId, formValues)
+        await pacientesService.actualizar(editingId, payload)
       } else {
-        await pacientesService.crear(formValues)
+        await pacientesService.crear(payload)
       }
       await loadPacientes()
       resetForm()
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo guardar el paciente.',
-      )
+    } catch {
+      setErrorMessage('No se pudo guardar el paciente. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -121,16 +122,16 @@ export function PacientesPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'Mostrando datos mock: backend no disponible.'
-            : 'Mostrando datos reales desde API.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando pacientes...</p>
+          <p className="state-message">Cargando pacientes...</p>
         ) : pacientes.length === 0 ? (
-          <p>No hay pacientes registrados.</p>
+          <p className="state-message">No hay pacientes registrados.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">
@@ -178,49 +179,60 @@ export function PacientesPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="nombres">Nombres</label>
-          <input
-            id="nombres"
-            name="nombres"
-            onChange={handleChange}
-            required
-            value={formValues.nombres}
-          />
+          <div className="form-field">
+            <label htmlFor="nombres">Nombres</label>
+            <input
+              id="nombres"
+              name="nombres"
+              onChange={handleChange}
+              required
+              value={formValues.nombres}
+            />
+          </div>
 
-          <label htmlFor="apellidos">Apellidos</label>
-          <input
-            id="apellidos"
-            name="apellidos"
-            onChange={handleChange}
-            required
-            value={formValues.apellidos}
-          />
+          <div className="form-field">
+            <label htmlFor="apellidos">Apellidos</label>
+            <input
+              id="apellidos"
+              name="apellidos"
+              onChange={handleChange}
+              required
+              value={formValues.apellidos}
+            />
+          </div>
 
-          <label htmlFor="rut">RUT</label>
-          <input
-            id="rut"
-            name="rut"
-            onChange={handleChange}
-            required
-            value={formValues.rut}
-          />
+          <div className="form-field">
+            <label htmlFor="rut">RUT</label>
+            <input
+              id="rut"
+              name="rut"
+              onChange={handleChange}
+              required
+              value={formValues.rut}
+            />
+          </div>
 
-          <label htmlFor="telefono">Teléfono</label>
-          <input
-            id="telefono"
-            name="telefono"
-            onChange={handleChange}
-            required
-            value={formValues.telefono}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            onChange={handleChange}
-            required
-            value={formValues.email}
-          />
+          <div className="form-field">
+            <label htmlFor="telefono">Teléfono</label>
+            <input
+              id="telefono"
+              name="telefono"
+              onChange={handleChange}
+              required
+              value={formValues.telefono}
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              onChange={handleChange}
+              required
+              value={formValues.email}
+            />
+          </div>
 
           <div className="module-form__actions">
             <button disabled={isSaving} type="submit">

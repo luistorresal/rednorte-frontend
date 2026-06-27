@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { citasService } from '../services/citasService'
+import { pacientesService } from '../services/pacientesService'
+import { profesionalesService } from '../services/profesionalesService'
 
 const EMPTY_FORM = {
   pacienteId: '',
@@ -15,6 +17,8 @@ const ESTADOS = ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'ATENDIDA']
 
 export function CitasPage() {
   const [citas, setCitas] = useState([])
+  const [pacientes, setPacientes] = useState([])
+  const [profesionales, setProfesionales] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [sourceMode, setSourceMode] = useState('api')
@@ -27,18 +31,58 @@ export function CitasPage() {
     [editingId],
   )
 
+  const pacientesById = useMemo(
+    () => new Map(pacientes.map((paciente) => [Number(paciente.id), paciente])),
+    [pacientes],
+  )
+
+  const profesionalesById = useMemo(
+    () =>
+      new Map(
+        profesionales.map((profesional) => [
+          Number(profesional.id),
+          profesional,
+        ]),
+      ),
+    [profesionales],
+  )
+
+  const getPacienteName = (pacienteId) => {
+    const paciente = pacientesById.get(Number(pacienteId))
+    if (!paciente) return `Paciente #${pacienteId}`
+    return `${paciente.nombres} ${paciente.apellidos}`.trim()
+  }
+
+  const getProfesionalName = (profesionalId) => {
+    const profesional = profesionalesById.get(Number(profesionalId))
+    if (!profesional) return `Profesional #${profesionalId}`
+    return `${profesional.nombres} ${profesional.apellidos}`.trim()
+  }
+
   const loadCitas = async () => {
     setIsLoading(true)
     setErrorMessage('')
 
     try {
-      const { data, source } = await citasService.listar()
-      setCitas(data)
-      setSourceMode(source)
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo cargar el listado de citas.',
+      const [citasResponse, pacientesResponse, profesionalesResponse] =
+        await Promise.all([
+          citasService.listar(),
+          pacientesService.listar(),
+          profesionalesService.listar(),
+        ])
+
+      setCitas(citasResponse.data)
+      setPacientes(pacientesResponse.data)
+      setProfesionales(profesionalesResponse.data)
+      setSourceMode(
+        [citasResponse.source, pacientesResponse.source, profesionalesResponse.source].includes(
+          'mock',
+        )
+          ? 'mock'
+          : 'api',
       )
+    } catch {
+      setErrorMessage('No se pudo cargar las citas. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -82,11 +126,8 @@ export function CitasPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar la cita seleccionada.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar la cita. Inténtalo nuevamente.')
     }
   }
 
@@ -113,8 +154,8 @@ export function CitasPage() {
       }
       await loadCitas()
       resetForm()
-    } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'No se pudo guardar la cita.')
+    } catch {
+      setErrorMessage('No se pudo guardar la cita. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -132,24 +173,24 @@ export function CitasPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'Mostrando datos mock: backend no disponible.'
-            : 'Mostrando datos reales desde API.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando citas...</p>
+          <p className="state-message">Cargando citas...</p>
         ) : citas.length === 0 ? (
-          <p>No hay citas registradas.</p>
+          <p className="state-message">No hay citas registradas.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>ID paciente</th>
-                  <th>ID profesional</th>
+                  <th>Paciente</th>
+                  <th>Profesional</th>
                   <th>Fecha</th>
                   <th>Modalidad</th>
                   <th>Estado</th>
@@ -161,8 +202,14 @@ export function CitasPage() {
                 {citas.map((cita) => (
                   <tr key={cita.id}>
                     <td>{cita.id}</td>
-                    <td>{cita.pacienteId}</td>
-                    <td>{cita.profesionalId}</td>
+                    <td>
+                      {getPacienteName(cita.pacienteId)}
+                      <span className="muted-cell">ID {cita.pacienteId}</span>
+                    </td>
+                    <td>
+                      {getProfesionalName(cita.profesionalId)}
+                      <span className="muted-cell">ID {cita.profesionalId}</span>
+                    </td>
                     <td>{new Date(cita.fecha).toLocaleString()}</td>
                     <td>{cita.modalidad}</td>
                     <td>{cita.estado}</td>
@@ -191,74 +238,97 @@ export function CitasPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="pacienteId">ID paciente</label>
-          <input
-            id="pacienteId"
-            min="1"
-            name="pacienteId"
-            onChange={handleChange}
-            required
-            type="number"
-            value={formValues.pacienteId}
-          />
+          <div className="form-field">
+            <label htmlFor="pacienteId">Paciente</label>
+            <select
+              id="pacienteId"
+              name="pacienteId"
+              onChange={handleChange}
+              required
+              value={formValues.pacienteId}
+            >
+              <option value="">Selecciona un paciente</option>
+              {pacientes.map((paciente) => (
+                <option key={paciente.id} value={paciente.id}>
+                  {paciente.nombres} {paciente.apellidos} (ID {paciente.id})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="profesionalId">ID profesional</label>
-          <input
-            id="profesionalId"
-            min="1"
-            name="profesionalId"
-            onChange={handleChange}
-            required
-            type="number"
-            value={formValues.profesionalId}
-          />
+          <div className="form-field">
+            <label htmlFor="profesionalId">Profesional</label>
+            <select
+              id="profesionalId"
+              name="profesionalId"
+              onChange={handleChange}
+              required
+              value={formValues.profesionalId}
+            >
+              <option value="">Selecciona un profesional</option>
+              {profesionales.map((profesional) => (
+                <option key={profesional.id} value={profesional.id}>
+                  {profesional.nombres} {profesional.apellidos} -{' '}
+                  {profesional.especialidad} (ID {profesional.id})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="fecha">Fecha y hora</label>
-          <input
-            id="fecha"
-            name="fecha"
-            onChange={handleChange}
-            required
-            type="datetime-local"
-            value={formValues.fecha}
-          />
+          <div className="form-field">
+            <label htmlFor="fecha">Fecha y hora</label>
+            <input
+              id="fecha"
+              name="fecha"
+              onChange={handleChange}
+              required
+              type="datetime-local"
+              value={formValues.fecha}
+            />
+          </div>
 
-          <label htmlFor="modalidad">Modalidad</label>
-          <select
-            id="modalidad"
-            name="modalidad"
-            onChange={handleChange}
-            value={formValues.modalidad}
-          >
-            {MODALIDADES.map((modalidad) => (
-              <option key={modalidad} value={modalidad}>
-                {modalidad}
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="modalidad">Modalidad</label>
+            <select
+              id="modalidad"
+              name="modalidad"
+              onChange={handleChange}
+              value={formValues.modalidad}
+            >
+              {MODALIDADES.map((modalidad) => (
+                <option key={modalidad} value={modalidad}>
+                  {modalidad}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="estado">Estado</label>
-          <select
-            id="estado"
-            name="estado"
-            onChange={handleChange}
-            value={formValues.estado}
-          >
-            {ESTADOS.map((estado) => (
-              <option key={estado} value={estado}>
-                {estado}
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="estado">Estado</label>
+            <select
+              id="estado"
+              name="estado"
+              onChange={handleChange}
+              value={formValues.estado}
+            >
+              {ESTADOS.map((estado) => (
+                <option key={estado} value={estado}>
+                  {estado}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="motivo">Motivo</label>
-          <textarea
-            id="motivo"
-            name="motivo"
-            onChange={handleChange}
-            rows="3"
-            value={formValues.motivo}
-          />
+          <div className="form-field">
+            <label htmlFor="motivo">Motivo</label>
+            <textarea
+              id="motivo"
+              name="motivo"
+              onChange={handleChange}
+              rows="3"
+              value={formValues.motivo}
+            />
+          </div>
 
           <div className="module-form__actions">
             <button disabled={isSaving} type="submit">

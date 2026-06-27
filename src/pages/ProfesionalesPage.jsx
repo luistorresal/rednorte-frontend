@@ -10,6 +10,15 @@ const EMPTY_FORM = {
   telefono: '',
 }
 
+const normalizeProfesionalPayload = (values) => ({
+  rut: values.rut.trim().toUpperCase(),
+  nombres: values.nombres.trim().toUpperCase(),
+  apellidos: values.apellidos.trim().toUpperCase(),
+  especialidad: values.especialidad.trim().toUpperCase(),
+  email: values.email.trim().toUpperCase(),
+  telefono: values.telefono.trim().toUpperCase(),
+})
+
 export function ProfesionalesPage() {
   const [profesionales, setProfesionales] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -32,11 +41,8 @@ export function ProfesionalesPage() {
       const { data, source } = await profesionalesService.listar()
       setProfesionales(data)
       setSourceMode(source)
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo cargar el listado de profesionales.',
-      )
+    } catch {
+      setErrorMessage('No se pudo cargar los profesionales. Inténtalo nuevamente.')
     } finally {
       setIsLoading(false)
     }
@@ -58,12 +64,12 @@ export function ProfesionalesPage() {
 
   const handleEdit = (profesional) => {
     setFormValues({
-      rut: profesional.rut,
-      nombres: profesional.nombres,
-      apellidos: profesional.apellidos,
-      especialidad: profesional.especialidad,
-      email: profesional.email,
-      telefono: profesional.telefono,
+      rut: profesional.rut || '',
+      nombres: profesional.nombres || '',
+      apellidos: profesional.apellidos || '',
+      especialidad: profesional.especialidad || '',
+      email: profesional.email || '',
+      telefono: profesional.telefono || '',
     })
     setEditingId(profesional.id)
   }
@@ -80,11 +86,8 @@ export function ProfesionalesPage() {
       if (editingId === id) {
         resetForm()
       }
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'No se pudo eliminar el profesional seleccionado.',
-      )
+    } catch {
+      setErrorMessage('No se pudo eliminar el profesional. Inténtalo nuevamente.')
     }
   }
 
@@ -94,17 +97,16 @@ export function ProfesionalesPage() {
     setErrorMessage('')
 
     try {
+      const payload = normalizeProfesionalPayload(formValues)
       if (editingId) {
-        await profesionalesService.actualizar(editingId, formValues)
+        await profesionalesService.actualizar(editingId, payload)
       } else {
-        await profesionalesService.crear(formValues)
+        await profesionalesService.crear(payload)
       }
       await loadProfesionales()
       resetForm()
-    } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.message || 'No se pudo guardar el profesional.',
-      )
+    } catch {
+      setErrorMessage('No se pudo guardar el profesional. Revisá los datos e inténtalo nuevamente.')
     } finally {
       setIsSaving(false)
     }
@@ -122,16 +124,16 @@ export function ProfesionalesPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'Mostrando datos mock: backend no disponible.'
-            : 'Mostrando datos reales desde API.'}
+            ? 'Mostrando datos de ejemplo.'
+            : 'Información actualizada.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
         {isLoading ? (
-          <p>Cargando profesionales...</p>
+          <p className="state-message">Cargando profesionales...</p>
         ) : profesionales.length === 0 ? (
-          <p>No hay profesionales registrados.</p>
+          <p className="state-message">No hay profesionales registrados.</p>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">
@@ -184,60 +186,72 @@ export function ProfesionalesPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="rut">RUT</label>
-          <input
-            id="rut"
-            name="rut"
-            onChange={handleChange}
-            required
-            value={formValues.rut}
-          />
+          <div className="form-field">
+            <label htmlFor="rut">RUT</label>
+            <input
+              id="rut"
+              name="rut"
+              onChange={handleChange}
+              required
+              value={formValues.rut}
+            />
+          </div>
 
-          <label htmlFor="nombres">Nombres</label>
-          <input
-            id="nombres"
-            name="nombres"
-            onChange={handleChange}
-            required
-            value={formValues.nombres}
-          />
+          <div className="form-field">
+            <label htmlFor="nombres">Nombres</label>
+            <input
+              id="nombres"
+              name="nombres"
+              onChange={handleChange}
+              required
+              value={formValues.nombres}
+            />
+          </div>
 
-          <label htmlFor="apellidos">Apellidos</label>
-          <input
-            id="apellidos"
-            name="apellidos"
-            onChange={handleChange}
-            required
-            value={formValues.apellidos}
-          />
+          <div className="form-field">
+            <label htmlFor="apellidos">Apellidos</label>
+            <input
+              id="apellidos"
+              name="apellidos"
+              onChange={handleChange}
+              required
+              value={formValues.apellidos}
+            />
+          </div>
 
-          <label htmlFor="especialidad">Especialidad</label>
-          <input
-            id="especialidad"
-            name="especialidad"
-            onChange={handleChange}
-            required
-            value={formValues.especialidad}
-          />
+          <div className="form-field">
+            <label htmlFor="especialidad">Especialidad</label>
+            <input
+              id="especialidad"
+              name="especialidad"
+              onChange={handleChange}
+              required
+              value={formValues.especialidad}
+            />
+          </div>
 
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            onChange={handleChange}
-            required
-            type="email"
-            value={formValues.email}
-          />
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              onChange={handleChange}
+              required
+              type="email"
+              value={formValues.email}
+            />
+          </div>
 
-          <label htmlFor="telefono">Teléfono</label>
-          <input
-            id="telefono"
-            name="telefono"
-            onChange={handleChange}
-            required
-            value={formValues.telefono}
-          />
+          <div className="form-field">
+            <label htmlFor="telefono">Teléfono</label>
+            <input
+              id="telefono"
+              name="telefono"
+              onChange={handleChange}
+              required
+              value={formValues.telefono}
+            />
+          </div>
 
           <div className="module-form__actions">
             <button disabled={isSaving} type="submit">

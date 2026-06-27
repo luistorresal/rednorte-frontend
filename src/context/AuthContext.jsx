@@ -1,4 +1,5 @@
 import { createContext, useMemo, useState } from 'react'
+import PropTypes from 'prop-types'
 import { TOKEN_STORAGE_KEY } from '../services/apiClient'
 import { authService } from '../services/authService'
 const DEMO_TOKEN = 'demo-mode-token'
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
       const nextToken = loginResponse?.token
 
       if (!nextToken) {
-        throw new Error('No se recibio token de autenticacion.')
+        throw new Error('No fue posible iniciar sesión. Inténtalo de nuevo.')
       }
 
       window.localStorage.setItem(TOKEN_STORAGE_KEY, nextToken)
@@ -42,7 +43,7 @@ export function AuthProvider({ children }) {
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        'No fue posible iniciar sesión.'
+        'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.'
       setAuthError(errorMessage)
       return false
     } finally {
@@ -74,3 +75,7 @@ export function AuthProvider({ children }) {
 }
 
 export { AuthContext }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}
