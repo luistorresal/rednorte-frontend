@@ -43,8 +43,8 @@ export function DashboardPage() {
   }, [summary])
 
   const sourceLabel = summary.sources.has('mock')
-    ? 'Datos demo por indisponibilidad de backend.'
-    : 'Datos reales desde API.'
+    ? 'Mostrando datos de demostración.'
+    : 'Información actualizada.'
 
   const loadDashboard = async () => {
     setIsLoading(true)

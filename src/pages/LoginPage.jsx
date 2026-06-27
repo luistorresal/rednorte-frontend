@@ -41,28 +41,32 @@ export function LoginPage() {
           </p>
         ) : null}
 
-        <label className="auth-label" htmlFor="username">
-          Usuario
-        </label>
-        <input
-          className="auth-input"
-          id="username"
-          name="username"
-          onChange={handleInputChange}
-          value={formValues.username}
-        />
+        <div className="form-field">
+          <label className="auth-label" htmlFor="username">
+            Usuario
+          </label>
+          <input
+            className="auth-input"
+            id="username"
+            name="username"
+            onChange={handleInputChange}
+            value={formValues.username}
+          />
+        </div>
 
-        <label className="auth-label" htmlFor="password">
-          Contraseña
-        </label>
-        <input
-          className="auth-input"
-          id="password"
-          name="password"
-          onChange={handleInputChange}
-          type="password"
-          value={formValues.password}
-        />
+        <div className="form-field">
+          <label className="auth-label" htmlFor="password">
+            Contraseña
+          </label>
+          <input
+            className="auth-input"
+            id="password"
+            name="password"
+            onChange={handleInputChange}
+            type="password"
+            value={formValues.password}
+          />
+        </div>
 
         {authError ? <p className="auth-error">{authError}</p> : null}
 

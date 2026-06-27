@@ -178,8 +178,8 @@ export function CitasPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'Mostrando datos mock: backend no disponible.'
-            : 'Mostrando datos reales desde API.'}
+            ? 'No se pudo conectar al servidor. Mostrando datos de ejemplo.'
+            : 'Datos cargados desde el servidor.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
@@ -243,85 +243,97 @@ export function CitasPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="pacienteId">Paciente</label>
-          <select
-            id="pacienteId"
-            name="pacienteId"
-            onChange={handleChange}
-            required
-            value={formValues.pacienteId}
-          >
-            <option value="">Selecciona un paciente</option>
-            {pacientes.map((paciente) => (
-              <option key={paciente.id} value={paciente.id}>
-                {paciente.nombres} {paciente.apellidos} (ID {paciente.id})
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="pacienteId">Paciente</label>
+            <select
+              id="pacienteId"
+              name="pacienteId"
+              onChange={handleChange}
+              required
+              value={formValues.pacienteId}
+            >
+              <option value="">Selecciona un paciente</option>
+              {pacientes.map((paciente) => (
+                <option key={paciente.id} value={paciente.id}>
+                  {paciente.nombres} {paciente.apellidos} (ID {paciente.id})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="profesionalId">Profesional</label>
-          <select
-            id="profesionalId"
-            name="profesionalId"
-            onChange={handleChange}
-            required
-            value={formValues.profesionalId}
-          >
-            <option value="">Selecciona un profesional</option>
-            {profesionales.map((profesional) => (
-              <option key={profesional.id} value={profesional.id}>
-                {profesional.nombres} {profesional.apellidos} -{' '}
-                {profesional.especialidad} (ID {profesional.id})
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="profesionalId">Profesional</label>
+            <select
+              id="profesionalId"
+              name="profesionalId"
+              onChange={handleChange}
+              required
+              value={formValues.profesionalId}
+            >
+              <option value="">Selecciona un profesional</option>
+              {profesionales.map((profesional) => (
+                <option key={profesional.id} value={profesional.id}>
+                  {profesional.nombres} {profesional.apellidos} -{' '}
+                  {profesional.especialidad} (ID {profesional.id})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="fecha">Fecha y hora</label>
-          <input
-            id="fecha"
-            name="fecha"
-            onChange={handleChange}
-            required
-            type="datetime-local"
-            value={formValues.fecha}
-          />
+          <div className="form-field">
+            <label htmlFor="fecha">Fecha y hora</label>
+            <input
+              id="fecha"
+              name="fecha"
+              onChange={handleChange}
+              required
+              type="datetime-local"
+              value={formValues.fecha}
+            />
+          </div>
 
-          <label htmlFor="modalidad">Modalidad</label>
-          <select
-            id="modalidad"
-            name="modalidad"
-            onChange={handleChange}
-            value={formValues.modalidad}
-          >
-            {MODALIDADES.map((modalidad) => (
-              <option key={modalidad} value={modalidad}>
-                {modalidad}
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="modalidad">Modalidad</label>
+            <select
+              id="modalidad"
+              name="modalidad"
+              onChange={handleChange}
+              value={formValues.modalidad}
+            >
+              {MODALIDADES.map((modalidad) => (
+                <option key={modalidad} value={modalidad}>
+                  {modalidad}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="estado">Estado</label>
-          <select
-            id="estado"
-            name="estado"
-            onChange={handleChange}
-            value={formValues.estado}
-          >
-            {ESTADOS.map((estado) => (
-              <option key={estado} value={estado}>
-                {estado}
-              </option>
-            ))}
-          </select>
+          <div className="form-field">
+            <label htmlFor="estado">Estado</label>
+            <select
+              id="estado"
+              name="estado"
+              onChange={handleChange}
+              value={formValues.estado}
+            >
+              {ESTADOS.map((estado) => (
+                <option key={estado} value={estado}>
+                  {estado}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label htmlFor="motivo">Motivo</label>
-          <textarea
-            id="motivo"
-            name="motivo"
-            onChange={handleChange}
-            rows="3"
-            value={formValues.motivo}
-          />
+          <div className="form-field">
+            <label htmlFor="motivo">Motivo</label>
+            <textarea
+              id="motivo"
+              name="motivo"
+              onChange={handleChange}
+              rows="3"
+              value={formValues.motivo}
+            />
+          </div>
 
           <div className="module-form__actions">
             <button disabled={isSaving} type="submit">

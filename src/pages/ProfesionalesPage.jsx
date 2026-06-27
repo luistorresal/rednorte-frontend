@@ -132,8 +132,8 @@ export function ProfesionalesPage() {
 
         <p className="page-card__hint">
           {sourceMode === 'mock'
-            ? 'Mostrando datos mock: backend no disponible.'
-            : 'Mostrando datos reales desde API.'}
+            ? 'No se pudo conectar al servidor. Mostrando datos de ejemplo.'
+            : 'Datos cargados desde el servidor.'}
         </p>
 
         {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
@@ -194,60 +194,72 @@ export function ProfesionalesPage() {
         <h2>{formTitle}</h2>
 
         <form className="module-form" onSubmit={handleSubmit}>
-          <label htmlFor="rut">RUT</label>
-          <input
-            id="rut"
-            name="rut"
-            onChange={handleChange}
-            required
-            value={formValues.rut}
-          />
+          <div className="form-field">
+            <label htmlFor="rut">RUT</label>
+            <input
+              id="rut"
+              name="rut"
+              onChange={handleChange}
+              required
+              value={formValues.rut}
+            />
+          </div>
 
-          <label htmlFor="nombres">Nombres</label>
-          <input
-            id="nombres"
-            name="nombres"
-            onChange={handleChange}
-            required
-            value={formValues.nombres}
-          />
+          <div className="form-field">
+            <label htmlFor="nombres">Nombres</label>
+            <input
+              id="nombres"
+              name="nombres"
+              onChange={handleChange}
+              required
+              value={formValues.nombres}
+            />
+          </div>
 
-          <label htmlFor="apellidos">Apellidos</label>
-          <input
-            id="apellidos"
-            name="apellidos"
-            onChange={handleChange}
-            required
-            value={formValues.apellidos}
-          />
+          <div className="form-field">
+            <label htmlFor="apellidos">Apellidos</label>
+            <input
+              id="apellidos"
+              name="apellidos"
+              onChange={handleChange}
+              required
+              value={formValues.apellidos}
+            />
+          </div>
 
-          <label htmlFor="especialidad">Especialidad</label>
-          <input
-            id="especialidad"
-            name="especialidad"
-            onChange={handleChange}
-            required
-            value={formValues.especialidad}
-          />
+          <div className="form-field">
+            <label htmlFor="especialidad">Especialidad</label>
+            <input
+              id="especialidad"
+              name="especialidad"
+              onChange={handleChange}
+              required
+              value={formValues.especialidad}
+            />
+          </div>
 
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            onChange={handleChange}
-            required
-            type="email"
-            value={formValues.email}
-          />
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              onChange={handleChange}
+              required
+              type="email"
+              value={formValues.email}
+            />
+          </div>
 
-          <label htmlFor="telefono">Teléfono</label>
-          <input
-            id="telefono"
-            name="telefono"
-            onChange={handleChange}
-            required
-            value={formValues.telefono}
-          />
+          <div className="form-field">
+            <label htmlFor="telefono">Teléfono</label>
+            <input
+              id="telefono"
+              name="telefono"
+              onChange={handleChange}
+              required
+              value={formValues.telefono}
+            />
+          </div>
 
           <div className="module-form__actions">
             <button disabled={isSaving} type="submit">

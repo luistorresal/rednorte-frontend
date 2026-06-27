@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
       const nextToken = loginResponse?.token
 
       if (!nextToken) {
-        throw new Error('No se recibio token de autenticacion.')
+        throw new Error('No se recibió token de autenticación.')
       }
 
       window.localStorage.setItem(TOKEN_STORAGE_KEY, nextToken)
@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        'No fue posible iniciar sesión.'
+        'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.'
       setAuthError(errorMessage)
       return false
     } finally {
